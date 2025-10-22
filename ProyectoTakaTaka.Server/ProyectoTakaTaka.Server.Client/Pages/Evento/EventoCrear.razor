@@ -1,0 +1,123 @@
+﻿@page "/eventos/crear"
+@inject IHttpServicio http
+@inject NavigationManager navHttp
+
+
+<h3>Crear Evento</h3>
+
+<EditForm Model="@evento" OnValidSubmit="GuardarEvento">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <fieldset class="border p-3">
+        <legend>Datos del Cliente</legend>
+        <InputText class="form-control mb-2" @bind-Value="evento.ClienteNombre" placeholder="Nombre" />
+        <InputText class="form-control mb-2" @bind-Value="evento.ClienteApellido" placeholder="Apellido" />
+        <InputText class="form-control mb-2" @bind-Value="evento.ClienteTelefono" placeholder="Teléfono" />
+    </fieldset>
+
+    <fieldset class="border p-3 mt-3">
+        <legend>Datos del Cumpleañero</legend>
+        <InputText class="form-control mb-2" @bind-Value="evento.CumpleaneroNombre" placeholder="Nombre" />
+        <InputNumber class="form-control mb-2" @bind-Value="evento.CumpleaneroEdad" placeholder="Edad" />
+    </fieldset>
+
+    <fieldset class="border p-3 mt-3">
+        <legend>Detalles del Evento</legend>
+        <InputDate class="form-control mb-2" @bind-Value="evento.Fecha" />
+        <InputText class="form-control mb-2" @bind-Value="evento.Tematica" placeholder="Temática del evento" />
+        <select class="form-select mb-2" @bind="evento.ComboId">
+            <option value="">Selecciona combo</option>
+            @foreach (var combo in combos)
+            {
+                <option value="@combo.Id">@combo.NomCombo</option>
+            }
+        </select>
+
+        <select class="form-select mb-2" @bind="evento.HorarioId">
+            <option value="">Selecciona horario</option>
+            @foreach (var horario in horarios)
+            {
+                <option value="@horario.Id">@horario.HInicio - @horario.HFin</option>
+            }
+        </select>
+
+        <label>Opcionales:</label>
+        @foreach (var opc in opcionales)
+        {
+            <div>
+                <input type="checkbox" value="@opc.Id" @onchange="(e) => SeleccionarOpcional(e, opc.Id)" /> @opc.NomOpcional
+            </div>
+        }
+    </fieldset>
+
+    <br />
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+
+<p class="text-danger mt-2">@mensaje</p>
+
+@code {
+    private EventoCrearFront evento = new();
+    private List<ComboDTO> combos = new();
+    private List<HorarioListadoDTO> horarios = new();
+    private List<OpcionalDTO> opcionales = new();
+    private string mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var respCombo = await http.Get<List<ComboDTO>>("api/Combos");
+        mensaje += respCombo.Error ? "Error cargando combos. " : "";
+        if (!respCombo.Error) combos = respCombo.Respuesta ?? new();
+
+        var respHor = await http.Get<List<HorarioListadoDTO>>("api/Horarios/ListadoHorarios");
+        mensaje += respHor.Error ? "Error cargando horarios. " : "";
+        if (!respHor.Error) horarios = respHor.Respuesta ?? new();
+
+        var respOpc = await http.Get<List<OpcionalDTO>>("api/Opcionales");
+        mensaje += respOpc.Error ? "Error cargando opcionales. " : "";
+        if (!respOpc.Error) opcionales = respOpc.Respuesta ?? new();
+    }
+
+    private async Task GuardarEvento()
+    {
+        var httpResp = await http.Post<EventoCrearFront, int>("api/Evento/CrearCompleto", evento);
+        if (!httpResp.Error)
+        {
+            navHttp.NavigateTo("/eventos");
+        }
+        else
+        {
+            mensaje = httpResp.ObtenerError();
+        }
+    }
+
+    private void SeleccionarOpcional(ChangeEventArgs e, int id)
+    {
+        bool seleccionado = (bool?)e.Value == true;
+        if (seleccionado)
+            evento.OpcionalesId.Add(id);
+        else
+            evento.OpcionalesId.Remove(id);
+    }
+
+    private void Cancelar() => navHttp.NavigateTo("/eventos");
+
+    public class EventoCrearFront
+    {
+        public string ClienteNombre { get; set; } = "";
+        public string ClienteApellido { get; set; } = "";
+        public string ClienteTelefono { get; set; } = "";
+        public string CumpleaneroNombre { get; set; } = "";
+        public int CumpleaneroEdad { get; set; }
+        public DateOnly Fecha { get; set; }
+        public int ComboId { get; set; }
+        public int HorarioId { get; set; }
+        public string Tematica { get; set; } = "";
+        public List<int> OpcionalesId { get; set; } = new();
+    }
+
+    public class ComboDTO { public int Id { get; set; } public string NomCombo { get; set; } = ""; }
+    public class OpcionalDTO { public int Id { get; set; } public string NomOpcional { get; set; } = ""; }
+}

@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\ProyectoTakaTaka.Shared\ProyectoTakaTaka.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Cliente\" />
+  </ItemGroup>
+
 </Project>

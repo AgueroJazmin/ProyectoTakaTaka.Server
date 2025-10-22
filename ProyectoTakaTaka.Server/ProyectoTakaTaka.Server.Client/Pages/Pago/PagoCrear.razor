@@ -1,0 +1,88 @@
+﻿@page "/pagos/crear"
+@inject IHttpServicio http
+@inject NavigationManager navHttp
+
+<h3>Registrar Pago</h3>
+
+<EditForm Model="@pago" OnValidSubmit="RegistrarPago">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Evento (vincula el pago a un evento / cliente)</label>
+        <select class="form-select" @bind="pago.EventoId">
+            <option value="0">-- Seleccione evento --</option>
+            @foreach (var e in eventos)
+            {
+                <option value="@e.Id">@($"{e.Evento} - {e.Fecha:dd/MM/yyyy}")</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group mt-2">
+        <label>Monto</label>
+        <InputNumber class="form-control" @bind-Value="pago.Monto" />
+    </div>
+
+    <div class="form-group mt-2">
+        <label>Método</label>
+        <InputText class="form-control" @bind-Value="pago.Metodo" placeholder="Efectivo / Transferencia / Tarjeta" />
+    </div>
+
+    <div class="form-group mt-2">
+        <label>Fecha de Pago</label>
+        <InputDate class="form-control" @bind-Value="pago.FechaPago" />
+    </div>
+
+    <button class="btn btn-primary mt-3" type="submit">Registrar</button>
+    <button class="btn btn-secondary mt-3" type="button" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+
+<p class="text-danger mt-2">@mensaje</p>
+
+@code {
+    CrearPagoDTO pago = new() { FechaPago = DateTime.Today }; 
+    List<ListadoEventoDTO> eventos = new();
+    string mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener eventos para poder seleccionar a cuál evento y por ende a qué cliente aplicar el pago
+        var respEventos = await http.Get<List<ListadoEventoDTO>>("api/Evento/ListadoEvento");
+        if (!respEventos.Error && respEventos.Respuesta != null)
+        {
+            eventos = respEventos.Respuesta;
+        }
+        else
+        {
+            mensaje = respEventos.ObtenerError();
+        }
+    }
+
+    private async Task RegistrarPago()
+    {
+        // Validaciones antes de enviar
+        if (pago.EventoId == 0)
+        {
+            mensaje = "Seleccione el evento al que se aplica el pago.";
+            return;
+        }
+        if (pago.Monto <= 0)
+        {
+            mensaje = "Ingrese un monto válido.";
+            return;
+        }
+
+        var resp = await http.Post<CrearPagoDTO, int>("api/Pagos", pago);
+        if (!resp.Error)
+        {
+            navHttp.NavigateTo("/pagos");
+        }
+        else
+        {
+            mensaje = resp.ObtenerError();
+        }
+    }
+
+    private void Cancelar() => navHttp.NavigateTo("/pagos");
+}

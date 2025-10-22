@@ -1,0 +1,116 @@
+﻿@page "/evento/calendario"
+@inject IHttpServicio http
+
+<h3>Calendario de Eventos</h3>
+
+@if (meses == null)
+{
+    <p>Cargando meses habilitados...</p>
+}
+else if (meses.Count == 0)
+{
+    <p>No hay meses habilitados actualmente.</p>
+}
+else
+{
+    <div class="mb-3">
+        <label><strong>Seleccionar mes habilitado:</strong></label>
+        <select @onchange="OnMesSeleccionado" class="form-select">
+            <option value="">-- Seleccione un mes habilitado --</option>
+            @foreach (var mes in meses)
+            {
+                <option value="@mes.Id">@($"{mes.MesHabilitado} {mes.Año}")</option>
+            }
+        </select>
+    </div>
+
+    @if (diasDelMes.Any())
+    {
+        <div class="calendario">
+            @foreach (var dia in diasDelMes)
+            {
+                <button class="btn @GetColorDia(dia)"
+                        @onclick="() => MostrarHorarios(dia)">
+                    @dia.Day
+                </button>
+            }
+        </div>
+    }
+
+    @if (horariosDelDia != null)
+    {
+        <h5 class="mt-3">Horarios del día: @fechaSeleccionada?.ToString("dd/MM/yyyy")</h5>
+        <ul>
+            @foreach (var h in horariosDelDia)
+            {
+                <li>
+                    @h.HInicio - @h.HFin :
+                    @(h.Disponible ? "Disponible ✅" : "Ocupado ❌")
+                </li>
+            }
+        </ul>
+    }
+}
+
+@code {
+    private List<MesDTO> meses = new();
+    private List<DateOnly> diasDelMes = new();
+    private List<HorarioListadoDTO>? horariosDelDia;
+    private DateOnly? fechaSeleccionada;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resp = await http.Get<List<MesDTO>>("api/Mes");
+        if (!resp.Error && resp.Respuesta != null)
+        {
+            // Solo los meses habilitados (EstadoRegistro == 1)
+            meses = resp.Respuesta.Where(m => m.EstadoRegistro == 1).ToList();
+        }
+    }
+
+    private void OnMesSeleccionado(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int mesId))
+        {
+            var mesSeleccionado = meses.FirstOrDefault(m => m.Id == mesId);
+            if (mesSeleccionado != null)
+            {
+                diasDelMes.Clear();
+                var mesNumero = DateTime.ParseExact(mesSeleccionado.MesHabilitado, "MMMM", null).Month;
+                var año = int.Parse(mesSeleccionado.Año);
+                int dias = DateTime.DaysInMonth(año, mesNumero);
+                for (int i = 1; i <= dias; i++)
+                    diasDelMes.Add(new DateOnly(año, mesNumero, i));
+            }
+        }
+    }
+
+    private async Task MostrarHorarios(DateOnly dia)
+    {
+        fechaSeleccionada = dia;
+        var resp = await http.Get<List<HorarioListadoDTO>>("api/Horarios/ListadoHorarios");
+        if (!resp.Error)
+        {
+            horariosDelDia = resp.Respuesta;
+        }
+    }
+
+    private string GetColorDia(DateOnly dia)
+    {
+        if (horariosDelDia == null) return "btn-outline-secondary";
+        int ocupados = horariosDelDia.Count(h => !h.Disponible);
+        int total = horariosDelDia.Count;
+        if (ocupados == total) return "btn-danger";   // rojo: completo
+        if (ocupados > 0) return "btn-warning";       // amarillo: parcialmente ocupado
+        return "btn-success";                         // verde: todo libre
+    }
+
+    public class MesDTO
+    {
+        public int Id { get; set; }
+        public string MesHabilitado { get; set; } = "";
+        public string Año { get; set; } = "";
+        public int EstadoRegistro { get; set; }
+    }
+}
+

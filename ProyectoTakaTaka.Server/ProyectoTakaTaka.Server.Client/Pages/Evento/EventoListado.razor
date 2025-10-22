@@ -1,0 +1,98 @@
+﻿@page "/eventos"
+@inject IHttpServicio http
+@inject NavigationManager navHttp
+
+
+<h3>Listado de Eventos</h3>
+<br />
+<a class="btn btn-primary" href="/eventos/crear">Nuevo evento</a>
+<br />
+<br />
+
+@if (eventos == null)
+{
+    <p>Cargando eventos...</p>
+}
+else if (eventos.Count == 0)
+{
+    <p>No hay eventos registrados.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Evento</th>
+                <th>Cliente</th>
+                <th>Cumpleañero</th>
+                <th>Edad</th>
+                <th>Combo</th>
+                <th>Fecha</th>
+                <th>Horario</th>
+                <th>Temática</th>
+                <th>Opcionales</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in eventos)
+            {
+                <tr>
+                    <td>@ev.Evento</td>
+                    <td>@ev.Cliente</td>
+                    <td>@ev.Cumpleanero</td>
+                    <td>@ev.Edad</td>
+                    <td>@ev.Combo</td>
+                    <td>@ev.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@($"{ev.HInicio} - {ev.HFin}")</td>
+                    <td>@ev.Tematica</td>
+                    <td>@string.Join(", ", ev.Opcionales)</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => Borrar(ev)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<p class="text-danger">@Mensaje</p>
+
+@code {
+    List<ListadoEventoDTO>? eventos;
+    string Mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LeerEventos();
+    }
+
+    private async Task LeerEventos()
+    {
+        var resp = await http.Get<List<ListadoEventoDTO>>("api/Evento/ListadoEvento");
+        if (!resp.Error)
+        {
+            eventos = resp.Respuesta;
+        }
+        else
+        {
+            Mensaje = resp.ObtenerError();
+        }
+    }
+
+    private async Task Borrar(ListadoEventoDTO ev)
+    {
+        var resp = await http.Delete($"api/Evento/{ev.Id}");
+        if (resp.Error)
+        {
+            Mensaje = resp.ObtenerError();
+        }
+        else
+        {
+            Mensaje = "Evento eliminado correctamente.";
+        }
+
+        await LeerEventos();
+    }
+}
