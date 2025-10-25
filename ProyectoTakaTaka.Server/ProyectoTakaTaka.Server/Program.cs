@@ -4,10 +4,16 @@ using ProyectoTakaTaka.BD.Datos.Entity;
 using ProyectoTakaTaka.Repositorio.Repositorios;
 using ProyectoTakaTaka.Server.Client.Pages;
 using ProyectoTakaTaka.Server.Components;
+using ProyectoTakaTaka.Servicio.ServicioHttp;
 using ProyectoTakaTaka.Shared.Configuraciones;
 
 //Configura el constructor de la aplicacion
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddScoped(sp =>
+    new HttpClient { BaseAddress = new Uri("https://localhost:7292") });
+builder.Services.AddScoped<IHttpServicio, HttpServicio>();
 
 // Agregar controladores (API)
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -41,6 +47,9 @@ builder.Services.AddScoped<IRepositorioPago, RepositorioPago>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddServerSideBlazor()
+      .AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 //Construccion de la aplicacion
 var app = builder.Build();

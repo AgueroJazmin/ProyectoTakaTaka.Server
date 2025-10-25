@@ -31,6 +31,7 @@ else
                 <th>Horario</th>
                 <th>Temática</th>
                 <th>Opcionales</th>
+                <th>Pagos</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -47,6 +48,7 @@ else
                     <td>@($"{ev.HInicio} - {ev.HFin}")</td>
                     <td>@ev.Tematica</td>
                     <td>@string.Join(", ", ev.Opcionales)</td>
+                    <td>@(ev.Pagos?.Count ?? 0)</td>
                     <td>
                         <button class="btn btn-danger btn-sm" @onclick="() => Borrar(ev)">Eliminar</button>
                     </td>

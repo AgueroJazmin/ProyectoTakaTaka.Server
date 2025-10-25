@@ -1,0 +1,60 @@
+﻿@page "/opcionales/listados"
+@inject IHttpServicio http
+
+<h3>Listado de precios de Opcionales</h3>
+
+<br />
+
+@if (opcionales == null)
+{
+    <p>Cargando opcionales...</p>
+}
+else if (opcionales.Count == 0)
+{
+    <p>No hay opcionales registrados.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre del Opcional</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var opcional in opcionales)
+            {
+                <tr>
+                    <td>@opcional.NomOpcional</td>
+                    <td>@opcional.Precio.ToString("C", new System.Globalization.CultureInfo("es-ARG"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p class="text-danger">@Mensaje</p>
+
+@code {
+    List<ListadoOpcionalDTO>? opcionales;
+    string Mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LeerOpcionales();
+    }
+
+    private async Task LeerOpcionales()
+    {
+        var resp = await http.Get<List<ListadoOpcionalDTO>>("api/Opcionales/ListadoOpcional");
+        if (!resp.Error)
+        {
+            opcionales = resp.Respuesta;
+        }
+        else
+        {
+            Mensaje = resp.ObtenerError();
+        }
+    }
+}

@@ -6,6 +6,7 @@ namespace ProyectoTakaTaka.Repositorio.Repositorios
     {
         Task DeletePago(int id);
         Task InsertPago(CrearPagoDTO dto);
+        //Task InsertPago(int id, CrearPagoDTO dto);
         Task<List<PagoListadoDTO>> SelectListadoPagos();
         Task UpdatePago(int id, CrearPagoDTO dto);
     }

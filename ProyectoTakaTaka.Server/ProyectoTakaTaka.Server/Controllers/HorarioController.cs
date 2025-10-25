@@ -70,7 +70,10 @@ namespace ProyectoTakaTaka.Server.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             var ok = await repositorio.DeleteHorario(id);
-            if (!ok) return NotFound($"No se encontró el horario {id}.");
+            if (!ok)
+            {
+                return Conflict($"No se puede eliminar el horario {id}: está asignado a uno o más eventos.");
+            }
             return Ok("Horario eliminado correctamente.");
         }
     }

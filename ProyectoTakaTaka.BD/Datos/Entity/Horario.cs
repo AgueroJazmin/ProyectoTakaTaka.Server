@@ -16,7 +16,6 @@ namespace ProyectoTakaTaka.BD.Datos.Entity
         public required TimeOnly HFin { get; set; }
         public bool MediaHoraExtra { get; set; } = false;
         public bool Disponible { get; set; } = true;
-
         public List<Evento>? Eventos { get; set; } = new();
     }
 }

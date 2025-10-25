@@ -51,7 +51,7 @@ namespace ProyectoTakaTaka.Server.Controllers
                 .ToListAsync();
 
             if (meses == null || meses.Count == 0)
-                return NotFound("No hay meses activos.");
+                return Ok(new List<MesListadoDTO>());
 
             return Ok(meses);
         }

@@ -68,13 +68,68 @@ namespace ProyectoTakaTaka.Repositorio.Repositorios
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteCliente(int id)
+        public async Task<bool> DeleteCliente(int id)
         {
-            var entidad = await context.Clientes.FindAsync(id);
-            if (entidad == null) return;
+            using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+                var cliente = await context.Clientes
+                    .FirstOrDefaultAsync(c => c.Id == id);
 
-            context.Clientes.Remove(entidad);
-            await context.SaveChangesAsync();
+                if (cliente == null)
+                    return false;
+
+                //Obtener cumpleañeros del cliente
+                var cumpleaneros = await context.Cumpleaneros
+                    .Where(c => c.ClienteId == id)
+                    .ToListAsync();
+
+                foreach (var cumple in cumpleaneros)
+                {
+                    //Eventos del cumpleañero
+                    var eventos = await context.Eventos
+                        .Include(e => e.EventoOpcionales)
+                        .Include(e => e.Pagos)
+                        .Where(e => e.CumpleaneroId == cumple.Id)
+                        .ToListAsync();
+
+                    foreach (var ev in eventos)
+                    {
+                        // eliminar pagos
+                        if (ev.Pagos != null && ev.Pagos.Any())
+                            context.Pagos.RemoveRange(ev.Pagos);
+
+                        // eliminar evento-opcionales
+                        if (ev.EventoOpcionales != null && ev.EventoOpcionales.Any())
+                            context.EventosOpcionales.RemoveRange(ev.EventoOpcionales);
+
+                        // liberar horario si viene cargado
+                        if (ev.HorarioId != 0)
+                        {
+                            var h = await context.Horarios.FindAsync(ev.HorarioId);
+                            if (h != null) h.Disponible = true;
+                        }
+
+                        // eliminar evento
+                        context.Eventos.Remove(ev);
+                    }
+
+                    // eliminar el cumpleañero
+                    context.Cumpleaneros.Remove(cumple);
+                }
+
+                // finalmente eliminar el cliente
+                context.Clientes.Remove(cliente);
+
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProyectoTakaTaka.Shared.Configuraciones;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,8 @@ namespace ProyectoTakaTaka.Servicio.ServicioHttp
                                               "application/json");
 
             var response = await http.PostAsync(url, contenido);
+            var respStr = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Respuesta cruda de POST {url}: {respStr}");
             if (response.IsSuccessStatusCode)
             {
                 var respuesta = await DesSerializar<TResp>(response);
@@ -61,11 +64,16 @@ namespace ProyectoTakaTaka.Servicio.ServicioHttp
         private async Task<T?> DesSerializar<T>(HttpResponseMessage response)
         {
             var respStr = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(respStr,
-                new JsonSerializerOptions
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters =
                 {
-                    PropertyNameCaseInsensitive = true
-                });
+                    new DateOnlyJsonConverter(),
+                    new TimeOnlyJsonConverter()
+                }
+            };
+            return JsonSerializer.Deserialize<T>(respStr, options);
         }
     }
 }

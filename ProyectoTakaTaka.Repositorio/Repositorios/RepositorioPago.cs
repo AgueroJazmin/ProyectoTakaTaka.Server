@@ -23,7 +23,7 @@ namespace ProyectoTakaTaka.Repositorio.Repositorios
         {
             return await context.Pagos
                 .Include(p => p.Evento)
-                .ThenInclude(e => e.Cumpleanero)
+                .ThenInclude(p => p.Cumpleanero)
                 .Include(p => p.Evento!.Cliente)
                 .Select(p => new PagoListadoDTO
                 {
@@ -32,6 +32,7 @@ namespace ProyectoTakaTaka.Repositorio.Repositorios
                     Metodo = p.Metodo,
                     EstadoPago = p.EstadoPago,
                     FechaPago = p.FechaPago,
+                    EventoId = p.EventoId,
                     Evento = $"{p.Evento!.Cumpleanero!.Nombre} - {p.Evento!.Cliente!.Nombre} {p.Evento!.Cliente!.Apellido}"
                 })
                 .ToListAsync();

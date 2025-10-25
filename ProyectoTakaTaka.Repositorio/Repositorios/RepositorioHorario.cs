@@ -25,12 +25,10 @@ namespace ProyectoTakaTaka.Repositorio.Repositorios
             return await context.Horarios
                 .Select(h => new HorarioListadoDTO
                 {
-                    Id = h.Id,
+                    HorarioId = h.Id,
                     HInicio = h.HInicio,
                     HFin = h.HFin,
-                    MediaHoraExtra = h.MediaHoraExtra,
-                    Disponible = h.Disponible,
-                    EstadoRegistro = (int)h.EstadoRegistro
+                    Disponible = h.Disponible
                 })
 
                 .ToListAsync();
@@ -62,12 +60,10 @@ namespace ProyectoTakaTaka.Repositorio.Repositorios
                 .Where(h => h.Disponible)
                 .Select(h => new HorarioListadoDTO
                 {
-                    Id = h.Id,
+                    HorarioId = h.Id,
                     HInicio = h.HInicio,
                     HFin = h.HFin,
-                    MediaHoraExtra = h.MediaHoraExtra,
-                    Disponible = h.Disponible,
-                    EstadoRegistro = (int)h.EstadoRegistro
+                    Disponible = h.Disponible
                 })
                 .ToListAsync();
         }
@@ -97,6 +93,13 @@ namespace ProyectoTakaTaka.Repositorio.Repositorios
         {
             var horario = await context.Horarios.FirstOrDefaultAsync(h => h.Id == id);
             if (horario == null) return false;
+
+            // ver si hay eventos usando este horario
+            bool enUso = await context.Eventos.AnyAsync(e => e.HorarioId == id);
+            if (enUso)
+            {
+                return false;
+            }
 
             context.Horarios.Remove(horario);
             await context.SaveChangesAsync();

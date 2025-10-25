@@ -52,8 +52,13 @@ namespace ProyectoTakaTaka.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await repositorio.DeleteCliente(id);
-            return Ok("Cliente eliminado correctamente");
+            var ok = await repositorio.DeleteCliente(id);
+            if (!ok)
+            {
+                // podrías distinguir entre "no existe" y "en uso"
+                return Conflict($"No se puede eliminar el cliente {id}: está asignado a uno o más eventos.");
+            }
+            return Ok("Cliente eliminado correctamente.");
         }
 
     }

@@ -24,11 +24,11 @@ namespace ProyectoTakaTaka.Server.Controllers
             return Ok(lista);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Post(CrearPagoDTO dto)
+        [HttpPost("CrearPago")]
+        public async Task<ActionResult<string>> Post(CrearPagoDTO dto)
         {
             await repositorio.InsertPago(dto);
-            return Ok("Pago registrado correctamente.");
+            return Ok(new { mensaje = "Pago registrado correctamente." });
         }
 
         [HttpPut("{id}")]

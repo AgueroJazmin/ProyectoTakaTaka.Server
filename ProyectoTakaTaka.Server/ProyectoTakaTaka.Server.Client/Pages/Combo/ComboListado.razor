@@ -1,0 +1,60 @@
+﻿@page "/combos/listados"
+@inject IHttpServicio http
+
+<h3>Listado de precios de Combos</h3>
+
+<br />
+
+@if (combos == null)
+{
+    <p>Cargando combos...</p>
+}
+else if (combos.Count == 0)
+{
+    <p>No hay combos registrados.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre del Combo</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var combo in combos)
+            {
+                <tr>
+                    <td>@combo.NomCombo</td>
+                    <td>@combo.Precio.ToString("C", new System.Globalization.CultureInfo("es-ARG"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p class="text-danger">@Mensaje</p>
+
+@code {
+    List<ListadoComboDTO>? combos;
+    string Mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LeerCombos();
+    }
+
+    private async Task LeerCombos()
+    {
+        var resp = await http.Get<List<ListadoComboDTO>>("api/Combos/ListadoCombos");
+        if (!resp.Error)
+        {
+            combos = resp.Respuesta;
+        }
+        else
+        {
+            Mensaje = resp.ObtenerError();
+        }
+    }
+}

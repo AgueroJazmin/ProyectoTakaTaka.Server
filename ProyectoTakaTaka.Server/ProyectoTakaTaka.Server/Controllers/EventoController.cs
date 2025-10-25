@@ -83,7 +83,8 @@ namespace ProyectoTakaTaka.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error al crear el evento completo: {ex.InnerException?.Message ?? ex.Message}");
+                var detalle = ex.InnerException?.Message ?? ex.Message;
+                return BadRequest($"Error al crear el evento: {detalle}");
             }
         }
 
@@ -97,6 +98,53 @@ namespace ProyectoTakaTaka.Server.Controllers
             }
 
             return Ok($"El evento: {id}  se elimino correctamente.");
+        }
+
+        [HttpGet("PorMes")]
+        public async Task<ActionResult<List<EventoCantidadDTO>>> PorMes(int mes, int año)
+        {
+            var lista = await repositorio.SelectEventosPorMes(mes, año);
+            return Ok(lista);
+        }
+
+        [HttpGet("PorFecha")]
+        public async Task<ActionResult<List<HorarioDiaDTO>>> PorFecha(string fecha) 
+        {
+            Console.WriteLine($"Petición recibida en PorFecha con parámetro: {fecha}");
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(fecha))
+                {
+                    Console.WriteLine("⚠Fecha no proporcionada.");
+                    return BadRequest("Fecha no proporcionada.");
+                }
+
+                DateOnly f;
+                if (!DateOnly.TryParseExact(fecha, new[] { "yyyy-MM-dd", "dd/MM/yyyy", "dd-MM-yyyy" },
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out f))
+                {
+                    Console.WriteLine($"Formato inválido: {fecha}");
+                    return BadRequest($"Formato de fecha inválido: {fecha}");
+                }
+
+                Console.WriteLine($"Fecha parseada correctamente: {f}");
+
+                var lista = await repositorio.SelectHorariosPorFecha(f);
+
+                Console.WriteLine($"Horarios devueltos: {lista.Count}");
+                foreach (var h in lista)
+                    Console.WriteLine($"   → {h.HorarioId}: {h.HInicio} a {h.HFin} (Disponible: {h.Disponible})");
+
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en PorFecha: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest(new { error = ex.Message, detalle = ex.StackTrace });
+            }
         }
     }
 }

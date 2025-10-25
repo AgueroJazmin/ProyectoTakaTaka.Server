@@ -32,7 +32,7 @@ else
             {
                 <tr>
                     <td>@p.Id</td>
-                    <td>@p.EventoId</td>
+                    <td>@GetEventoNombre(p.EventoId)</td>
                     <td>@p.EstadoPago</td>
                     <td>@p.Metodo</td>
                     <td>@p.Monto.ToString("C")</td>
@@ -47,11 +47,13 @@ else
 
 @code {
     List<PagoListadoDTO>? pagos;
+    List<ListadoEventoDTO> eventos = new();
     string Mensaje = "";
 
     protected override async Task OnInitializedAsync()
     {
-        await LeerPagos();
+        await CargarEventos();
+        await CargarPagos();
     }
 
     private async Task LeerPagos()
@@ -65,5 +67,24 @@ else
         {
             Mensaje = resp.ObtenerError();
         }
+    }
+
+    private async Task CargarPagos()
+    {
+        var r = await http.Get<List<PagoListadoDTO>>("api/Pagos/ListadoPagos");
+        if (!r.Error) pagos = r.Respuesta;
+        else Mensaje = r.ObtenerError();
+    }
+
+    private string GetEventoNombre(int eventoId)
+    {
+        var ev = eventos.FirstOrDefault(x => x.Id == eventoId);
+        return ev != null ? ev.Evento : eventoId.ToString();
+    }
+
+    private async Task CargarEventos()
+    {
+        var r = await http.Get<List<ListadoEventoDTO>>("api/Evento/ListadoEvento");
+        if (!r.Error) eventos = r.Respuesta ?? new();
     }
 }

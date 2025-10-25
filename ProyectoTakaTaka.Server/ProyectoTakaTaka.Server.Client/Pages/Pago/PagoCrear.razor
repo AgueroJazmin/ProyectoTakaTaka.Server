@@ -8,75 +8,61 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group">
-        <label>Evento (vincula el pago a un evento / cliente)</label>
-        <select class="form-select" @bind="pago.EventoId">
-            <option value="0">-- Seleccione evento --</option>
-            @foreach (var e in eventos)
-            {
-                <option value="@e.Id">@($"{e.Evento} - {e.Fecha:dd/MM/yyyy}")</option>
-            }
-        </select>
-    </div>
+    <label>Evento</label>
+    <select class="form-select" @bind="pago.EventoId">
+        <option value="0">-- Seleccione evento --</option>
+        @foreach (var e in eventos)
+        {
+            <option value="@e.Id">@e.Evento</option>
+        }
+    </select>
 
-    <div class="form-group mt-2">
-        <label>Monto</label>
-        <InputNumber class="form-control" @bind-Value="pago.Monto" />
-    </div>
+    <label>Monto</label>
+    <InputNumber class="form-control" @bind-Value="pago.Monto" />
 
-    <div class="form-group mt-2">
-        <label>Método</label>
-        <InputText class="form-control" @bind-Value="pago.Metodo" placeholder="Efectivo / Transferencia / Tarjeta" />
-    </div>
+    <label>Método</label>
+    <InputText class="form-control" @bind-Value="pago.Metodo" />
 
-    <div class="form-group mt-2">
-        <label>Fecha de Pago</label>
-        <InputDate class="form-control" @bind-Value="pago.FechaPago" />
-    </div>
+    <label>Estado de Pago</label>
+    <select class="form-select" @bind="pago.EstadoPago">
+        <option value="">Seleccione...</option>
+        <option>Señado</option>
+        <option>Pagado</option>
+    </select>
+
+    <label>Fecha de Pago</label>
+    <InputDate class="form-control" @bind-Value="pago.FechaPago" />
 
     <button class="btn btn-primary mt-3" type="submit">Registrar</button>
-    <button class="btn btn-secondary mt-3" type="button" @onclick="Cancelar">Cancelar</button>
+    <button class="btn btn-secondary mt-3" @onclick="Cancelar">Cancelar</button>
+
+    <button class="btn btn-info mt-3" type="button" @onclick="IrALista">Ver lista de pagos</button>
 </EditForm>
 
-<p class="text-danger mt-2">@mensaje</p>
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="mt-2 @(exito ? "text-exito" : "text-danger")">@mensaje</div>
+}
+
 
 @code {
-    CrearPagoDTO pago = new() { FechaPago = DateTime.Today }; 
-    List<ListadoEventoDTO> eventos = new();
-    string mensaje = "";
+    private CrearPagoDTO pago = new() { FechaPago = DateTime.Today };
+    private List<ListadoEventoDTO> eventos = new();
+    private string mensaje = "";
+    bool exito = false;
+
 
     protected override async Task OnInitializedAsync()
     {
-        // Obtener eventos para poder seleccionar a cuál evento y por ende a qué cliente aplicar el pago
-        var respEventos = await http.Get<List<ListadoEventoDTO>>("api/Evento/ListadoEvento");
-        if (!respEventos.Error && respEventos.Respuesta != null)
-        {
-            eventos = respEventos.Respuesta;
-        }
-        else
-        {
-            mensaje = respEventos.ObtenerError();
-        }
+        await CargarEventos();  
     }
 
-    private async Task RegistrarPago()
+    private async Task CargarEventos()
     {
-        // Validaciones antes de enviar
-        if (pago.EventoId == 0)
-        {
-            mensaje = "Seleccione el evento al que se aplica el pago.";
-            return;
-        }
-        if (pago.Monto <= 0)
-        {
-            mensaje = "Ingrese un monto válido.";
-            return;
-        }
-
-        var resp = await http.Post<CrearPagoDTO, int>("api/Pagos", pago);
+        var resp = await http.Get<List<ListadoEventoDTO>>("api/Evento/ListadoEvento");
         if (!resp.Error)
         {
-            navHttp.NavigateTo("/pagos");
+            eventos = resp.Respuesta ?? new();
         }
         else
         {
@@ -84,5 +70,62 @@
         }
     }
 
+    private async Task RegistrarPago()
+    {
+        try
+        {
+            mensaje = "";
+            exito = false;
+
+            if (pago.EventoId == 0)
+            {
+                mensaje = "Seleccione un evento válido.";
+                return;
+            }
+
+            if (pago.Monto <= 0)
+            {
+                mensaje = "El monto debe ser mayor a 0.";
+                return;
+            }
+
+            var resp = await http.Post<CrearPagoDTO, object>("api/Pagos/CrearPago", pago);
+
+            if (!resp.Error)
+            {
+                exito = true;
+                mensaje = "Pago registrado correctamente.";
+                StateHasChanged();
+                await Task.Run(async () => await Task.Delay(1000));
+                navHttp.NavigateTo("/pagos", forceLoad: true);
+            }
+            else
+            {
+                mensaje = resp.ObtenerError();
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error inesperado: {ex.Message}";
+        }
+    }
+
     private void Cancelar() => navHttp.NavigateTo("/pagos");
+
+    private void IrALista() => navHttp.NavigateTo("/pagos");
+
+    public class CrearPagoDTO
+    {
+        public int EventoId { get; set; }
+        public decimal Monto { get; set; }
+        public string Metodo { get; set; } = "";
+        public string EstadoPago { get; set; } = "";
+        public DateTime FechaPago { get; set; }
+    }
+
+    public class ListadoEventoDTO
+    {
+        public int Id { get; set; }
+        public string Evento { get; set; } = "";
+    }
 }
