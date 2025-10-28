@@ -3,38 +3,94 @@
 
 <h3>Listado de precios de Opcionales</h3>
 
-<br />
-
 @if (opcionales == null)
 {
-    <p>Cargando opcionales...</p>
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3 text-muted fw-bold">Cargando opcionales...</p>
+    </div>
 }
 else if (opcionales.Count == 0)
 {
-    <p>No hay opcionales registrados.</p>
+    <div class="alert alert-info">
+        <strong>ℹ️ Sin opcionales</strong><br />
+        No hay opcionales registrados en el sistema.
+    </div>
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nombre del Opcional</th>
-                <th>Precio</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var opcional in opcionales)
-            {
-                <tr>
-                    <td>@opcional.NomOpcional</td>
-                    <td>@opcional.Precio.ToString("C", new System.Globalization.CultureInfo("es-ARG"))</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row g-4">
+        @foreach (var opcional in opcionales)
+        {
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="opcional-card h-100">
+                    <div class="opcional-card-icon">
+                        @if (opcional.NomOpcional.Contains("Globologia"))
+                        {
+                            <span class="icon-emoji">🎈</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Sorpres"))
+                        {
+                            <span class="icon-emoji">🎁</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Neon") || opcional.NomOpcional.Contains("LED"))
+                        {
+                            <span class="icon-emoji">💡</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("FotoCabina") || opcional.NomOpcional.Contains("Foto"))
+                        {
+                            <span class="icon-emoji">📸</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Minutos"))
+                        {
+                            <span class="icon-emoji">⏰</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Candy"))
+                        {
+                            <span class="icon-emoji">🍬</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Glitter") || opcional.NomOpcional.Contains("Maquillaje"))
+                        {
+                            <span class="icon-emoji">✨</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Coordinadora"))
+                        {
+                            <span class="icon-emoji">👩‍💼</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Robot"))
+                        {
+                            <span class="icon-emoji">🤖</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Torta"))
+                        {
+                            <span class="icon-emoji">🎂</span>
+                        }
+                        else if (opcional.NomOpcional.Contains("Locos"))
+                        {
+                            <span class="icon-emoji">🤪</span>
+                        }
+                        else
+                        {
+                            <span class="icon-emoji">⭐</span>
+                        }
+                    </div>
+
+                    <div class="opcional-card-body">
+                        <h6 class="opcional-card-title">@opcional.NomOpcional</h6>
+
+                        <div class="opcional-card-price">
+                            <span class="price-amount">@opcional.Precio.ToString("C", new System.Globalization.CultureInfo("es-AR"))</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 
-<p class="text-danger">@Mensaje</p>
+<p class="text-danger mt-4">@Mensaje</p>
 
 @code {
     List<ListadoOpcionalDTO>? opcionales;

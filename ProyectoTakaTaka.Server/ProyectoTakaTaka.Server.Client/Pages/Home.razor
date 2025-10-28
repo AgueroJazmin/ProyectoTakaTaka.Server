@@ -1,22 +1,140 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Taka Taka - Salón de Fiestas</PageTitle>
 
-<h1 class="text-center mt-3 text-pink">Bienvenidos a Taka Taka 🎈</h1>
-
-<p class="text-center">Salón de fiestas infantiles y teens</p>
-
-<div id="carouselTakaTaka" class="carousel slide mt-4" data-bs-ride="carousel" data-bs-interval="2500">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="images/foto1.jpg" class="d-block w-100 rounded-4 shadow" alt="Fiesta 1">
+<div class="home-container">
+    <div class="hero-section text-center py-4">
+        <h1 class="display-4 fw-bold mb-3 animate-title">
+            <span class="text-gradient">Bienvenidos a Taka Taka</span> 🎈
+        </h1>
+        <p class="lead fs-4 text-secondary mb-4">
+            Salón de fiestas infantiles y teens
+        </p>
+        <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+            <a href="/eventos/crear" class="btn btn-primary btn-lg shadow-lg">
+                🎉 Reservar Evento
+            </a>
+            <a href="/eventos" class="btn btn-secondary btn-lg shadow-lg">
+                📋 Ver Eventos
+            </a>
         </div>
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselTakaTaka" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselTakaTaka" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
+    <!-- Carousel de fotos -->
+    <div class="carousel-container">
+        <div id="carouselTakaTaka" class="carousel slide shadow-lg"
+             data-bs-ride="carousel"
+             data-bs-interval="3000">
+
+            <div class="carousel-indicators">
+                <button type="button"
+                        data-bs-target="#carouselTakaTaka"
+                        data-bs-slide-to="0"
+                        class="active"></button>
+            </div>
+
+            <div class="carousel-inner rounded-4">
+                <div class="carousel-item active">
+                    <img src="images/foto1.jpg"
+                         class="d-block w-100 carousel-img"
+                         alt="Celebración en Taka Taka">
+                    <div class="carousel-caption d-none d-md-block bg-gradient-caption p-3 rounded-3">
+                        <h5 class="fw-bold">¡Celebrá tu momento especial!</h5>
+                        <p>El mejor lugar para fiestas inolvidables</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button"
+                    data-bs-target="#carouselTakaTaka" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button"
+                    data-bs-target="#carouselTakaTaka" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Sección de información -->
+    <div class="info-cards mt-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="info-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="icon-wrapper mb-3">
+                        <span class="display-4">🎂</span>
+                    </div>
+                    <h4 class="text-gradient fw-bold">Cumpleaños</h4>
+                    <p class="text-muted">
+                        Hacé del cumple de tu hijo/a un día mágico e inolvidable
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="icon-wrapper mb-3">
+                        <span class="display-4">🎮</span>
+                    </div>
+                    <h4 class="text-gradient fw-bold">Fiestas Teens</h4>
+                    <p class="text-muted">
+                        Eventos especiales para adolescentes con toda la onda
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="icon-wrapper mb-3">
+                        <span class="display-4">🎪</span>
+                    </div>
+                    <h4 class="text-gradient fw-bold">Tus Ideas</h4>
+                    <p class="text-muted">
+                        Temáticas personalizadas para que tu fiesta sea única
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accesos rápidos -->
+    <div class="quick-access mt-5 p-4 bg-white rounded-4 shadow-sm">
+        <h3 class="text-center mb-4">
+            <span class="text-gradient">Accesos Rápidos</span>
+        </h3>
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <a href="/combos/listados" class="quick-link">
+                    <div class="text-center p-3 rounded-3 bg-light quick-link-content">
+                        <span class="fs-2">📦</span>
+                        <p class="mb-0 mt-2 fw-bold small">Ver Combos</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="/opcionales/listados" class="quick-link">
+                    <div class="text-center p-3 rounded-3 bg-light quick-link-content">
+                        <span class="fs-2">⭐</span>
+                        <p class="mb-0 mt-2 fw-bold small">Opcionales</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="/eventos" class="quick-link">
+                    <div class="text-center p-3 rounded-3 bg-light quick-link-content">
+                        <span class="fs-2">📅</span>
+                        <p class="mb-0 mt-2 fw-bold small">Mis Eventos</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="/pagos/crear" class="quick-link">
+                    <div class="text-center p-3 rounded-3 bg-light quick-link-content">
+                        <span class="fs-2">💳</span>
+                        <p class="mb-0 mt-2 fw-bold small">Pagos</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>

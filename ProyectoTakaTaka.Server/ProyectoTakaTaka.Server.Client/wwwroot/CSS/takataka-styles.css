@@ -1,0 +1,980 @@
+﻿/* ========================================
+   TAKA TAKA - Sistema de Gestión de Eventos
+   Paleta: Rosa y Celeste
+   ======================================== */
+
+:root {
+    /* Colores principales Rosa */
+    --rosa-fuerte: #FF1493;
+    --rosa-medio: #FF69B4;
+    --rosa-claro: #FFB6C1;
+    --rosa-pastel: #FFC0CB;
+    /* Colores principales Celeste */
+    --celeste-fuerte: #00CED1;
+    --celeste-medio: #48D1CC;
+    --celeste-claro: #87CEEB;
+    --celeste-pastel: #B0E0E6;
+    /* Gradientes principales */
+    --gradient-principal: linear-gradient(135deg, #FF1493 0%, #FF69B4 50%, #00CED1 100%);
+    --gradient-suave: linear-gradient(135deg, #FFB6C1 0%, #B0E0E6 100%);
+    --gradient-inverso: linear-gradient(135deg, #00CED1 0%, #48D1CC 50%, #FF1493 100%);
+    /* Sombras */
+    --shadow-sm: 0 2px 8px rgba(255, 20, 147, 0.15);
+    --shadow-md: 0 4px 16px rgba(255, 20, 147, 0.2);
+    --shadow-lg: 0 8px 24px rgba(255, 20, 147, 0.25);
+    --shadow-celeste: 0 4px 16px rgba(0, 206, 209, 0.2);
+}
+
+/* ========================================
+   ESTILOS GENERALES
+   ======================================== */
+
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    background: linear-gradient(to bottom right, #FFF5F7 0%, #E0F7FA 100%);
+    min-height: 100vh;
+}
+
+/* ========================================
+   NAVBAR SUPERIOR
+   ======================================== */
+
+.top-row {
+    background: var(--gradient-principal) !important;
+    box-shadow: var(--shadow-md);
+    padding: 1rem 1.5rem !important;
+}
+
+    .top-row a {
+        color: white !important;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+        .top-row a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+/* ========================================
+   SIDEBAR / MENÚ LATERAL
+   ======================================== */
+
+.sidebar {
+    background: linear-gradient(180deg, #2C3E50 0%, #1a252f 100%);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav-scrollable {
+    background: transparent;
+}
+
+.nav-item {
+    margin: 8px 12px;
+}
+
+.nav-link {
+    color: #E0E0E0 !important;
+    border-radius: 12px;
+    padding: 14px 18px !important;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .nav-link:hover {
+        background: var(--gradient-principal);
+        color: white !important;
+        transform: translateX(5px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .nav-link.active {
+        background: var(--gradient-principal);
+        color: white !important;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+    }
+
+    .nav-link span {
+        font-size: 1.1rem;
+    }
+
+/* ========================================
+   TÍTULOS Y ENCABEZADOS
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+}
+
+h3 {
+    color: var(--rosa-fuerte);
+    margin-bottom: 2rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 4px solid var(--celeste-fuerte);
+    display: inline-block;
+    position: relative;
+}
+
+    h3::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 50%;
+        height: 4px;
+        background: var(--gradient-principal);
+        border-radius: 2px;
+    }
+
+.text-pink {
+    background: var(--gradient-principal);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ========================================
+   BOTONES
+   ======================================== */
+
+.btn {
+    border-radius: 25px;
+    padding: 10px 28px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+}
+
+.btn-primary {
+    background: var(--gradient-principal) !important;
+    color: white !important;
+    box-shadow: var(--shadow-sm);
+}
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .btn-primary:active {
+        transform: translateY(-1px);
+    }
+
+.btn-secondary {
+    background: var(--gradient-suave) !important;
+    color: #2C3E50 !important;
+    font-weight: 700;
+}
+
+    .btn-secondary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-celeste);
+    }
+
+.btn-danger {
+    background: linear-gradient(135deg, #FF416C 0%, #FF1493 100%) !important;
+    border-radius: 20px;
+    padding: 8px 20px;
+}
+
+    .btn-danger:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 65, 108, 0.4);
+    }
+
+.btn-info {
+    background: var(--gradient-inverso) !important;
+    color: white !important;
+}
+
+.btn-sm {
+    padding: 6px 18px;
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   TABLAS
+   ======================================== */
+
+.table {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-top: 1.5rem;
+}
+
+    .table thead {
+        background: var(--gradient-principal);
+        color: white;
+    }
+
+        .table thead th {
+            border: none;
+            padding: 18px 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 182, 193, 0.05);
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+    .table tbody tr:hover {
+        background: linear-gradient(90deg, rgba(255, 20, 147, 0.08) 0%, rgba(0, 206, 209, 0.08) 100%);
+        transform: scale(1.01);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+.table tbody td {
+    padding: 16px 15px;
+    vertical-align: middle;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ========================================
+   FORMULARIOS
+   ======================================== */
+
+.form-control, .form-select {
+    border-radius: 12px;
+    border: 2px solid #E8E8E8;
+    padding: 12px 18px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--celeste-fuerte);
+        box-shadow: 0 0 0 0.25rem rgba(0, 206, 209, 0.15);
+        outline: none;
+    }
+
+    .form-control:hover, .form-select:hover {
+        border-color: var(--rosa-medio);
+    }
+
+label {
+    font-weight: 600;
+    color: #2C3E50;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* ========================================
+   FIELDSETS
+   ======================================== */
+
+fieldset {
+    border-radius: 16px !important;
+    border: 2px solid rgba(255, 20, 147, 0.2) !important;
+    padding: 24px !important;
+    background: white;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+}
+
+    fieldset legend {
+        background: var(--gradient-principal);
+        color: white;
+        padding: 10px 24px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 1rem;
+        width: auto;
+        margin-bottom: 0;
+        box-shadow: var(--shadow-sm);
+    }
+
+/* ========================================
+   CHECKBOXES
+   ======================================== */
+
+input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    margin-right: 12px;
+    accent-color: var(--rosa-fuerte);
+    border-radius: 5px;
+}
+
+    input[type="checkbox"]:checked {
+        background: var(--gradient-principal);
+    }
+
+/* ========================================
+   MENSAJES
+   ======================================== */
+
+.text-danger {
+    background: linear-gradient(135deg, #FFE6E6 0%, #FFEEF0 100%);
+    padding: 12px 20px;
+    border-radius: 12px;
+    border-left: 5px solid #FF1493;
+    display: inline-block;
+    color: #C41E3A;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+.text-exito {
+    background: linear-gradient(135deg, #E6FFE6 0%, #E0F7FA 100%);
+    padding: 12px 20px;
+    border-radius: 12px;
+    border-left: 5px solid #00CED1;
+    color: #00796B;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ========================================
+   CARDS Y CONTENEDORES
+   ======================================== */
+
+.mb-2, .mt-3 {
+    transition: all 0.3s ease;
+}
+
+.border {
+    border: 2px solid rgba(255, 20, 147, 0.15) !important;
+}
+
+/* ========================================
+   CAROUSEL (HOME)
+   ======================================== */
+
+.carousel {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.carousel-item img {
+    height: 500px;
+    object-fit: cover;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: var(--rosa-fuerte);
+    border-radius: 50%;
+    padding: 20px;
+}
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.content {
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.02);
+    }
+}
+
+p:contains("Cargando") {
+    animation: pulse 1.5s ease-in-out infinite;
+    color: var(--rosa-fuerte);
+    font-weight: 700;
+}
+
+/* ========================================
+   BADGES Y ETIQUETAS
+   ======================================== */
+
+.badge {
+    background: var(--gradient-principal);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* ========================================
+   ESTADOS ESPECIALES
+   ======================================== */
+
+.fecha-seleccionada {
+    background: var(--gradient-suave);
+    padding: 10px 20px;
+    border-radius: 12px;
+    display: inline-block;
+    font-weight: 600;
+    color: #2C3E50;
+}
+
+    .fecha-seleccionada b {
+        color: var(--rosa-fuerte);
+    }
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.85rem;
+    }
+
+    .btn {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-item img {
+        height: 300px;
+    }
+}
+
+/* ========================================
+   DECORACIONES ESPECIALES
+   ======================================== */
+
+/* Globito decorativo */
+body::after {
+    content: "🎈";
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 3rem;
+    opacity: 0.2;
+    z-index: -1;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Efecto de brillo en hover */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+/* ========================================
+   SCROLLBAR PERSONALIZADO
+   ======================================== */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F0F0F0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gradient-principal);
+    border-radius: 10px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--gradient-inverso);
+    }
+
+/* ========================================
+   ESTILOS PARA HOME.RAZOR
+   ======================================== */
+
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.animate-title {
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.carousel-container {
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.carousel-img {
+    height: 500px;
+    object-fit: cover;
+}
+
+.bg-gradient-caption {
+    background: linear-gradient(135deg, rgba(255, 20, 147, 0.9) 0%, rgba(0, 206, 209, 0.9) 100%);
+}
+
+.info-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+    .info-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--rosa-fuerte);
+        box-shadow: 0 8px 24px rgba(255, 20, 147, 0.2);
+    }
+
+.icon-wrapper {
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.quick-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+    .quick-link:hover {
+        transform: scale(1.05);
+    }
+
+.quick-link-content {
+    transition: all 0.3s ease;
+}
+
+.quick-link:hover .quick-link-content {
+    background: linear-gradient(135deg, #FFB6C1 0%, #B0E0E6 100%);
+}
+
+.carousel-indicators button {
+    background-color: var(--rosa-fuerte);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+    .carousel-img {
+        height: 300px;
+    }
+}
+
+/* ========================================
+   ESTILOS PARA CARDS DE COMBOS
+   ======================================== */
+
+.combo-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    position: relative;
+}
+
+    .combo-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--gradient-principal);
+    }
+
+    .combo-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 12px 28px rgba(255, 20, 147, 0.25);
+        border-color: var(--rosa-fuerte);
+    }
+
+.combo-card-icon {
+    background: linear-gradient(135deg, #FFB6C1 0%, #B0E0E6 100%);
+    padding: 2rem;
+    text-align: center;
+}
+
+    .combo-card-icon .icon-emoji {
+        font-size: 3.5rem;
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+    }
+
+.combo-card-body {
+    padding: 1.5rem;
+}
+
+.combo-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2C3E50;
+    margin-bottom: 1rem;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+}
+
+.combo-card-divider {
+    height: 2px;
+    background: var(--gradient-principal);
+    margin: 1rem 0;
+    border-radius: 2px;
+}
+
+.combo-card-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .combo-card-price .price-label {
+        font-size: 0.85rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    .combo-card-price .price-amount {
+        font-size: 1.75rem;
+        font-weight: 800;
+        background: var(--gradient-principal);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+.combo-card-footer {
+    background: linear-gradient(135deg, rgba(255, 20, 147, 0.05) 0%, rgba(0, 206, 209, 0.05) 100%);
+    padding: 1rem;
+    text-align: center;
+}
+
+.badge-day {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--gradient-principal);
+    color: white;
+}
+
+    .badge-day.viernes {
+        background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
+    }
+
+    .badge-day.findes {
+        background: linear-gradient(135deg, #00CED1 0%, #48D1CC 100%);
+    }
+
+/* ========================================
+   ESTILOS PARA CARDS DE OPCIONALES
+   ======================================== */
+
+.opcional-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+    .opcional-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 20px rgba(0, 206, 209, 0.2);
+        border-color: var(--celeste-fuerte);
+    }
+
+.opcional-card-icon {
+    background: linear-gradient(135deg, #B0E0E6 0%, #FFB6C1 100%);
+    padding: 1.5rem;
+    text-align: center;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .opcional-card-icon .icon-emoji {
+        font-size: 3rem;
+        display: inline-block;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+.opcional-card-body {
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.opcional-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2C3E50;
+    margin-bottom: 0.75rem;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.opcional-card-price .price-amount {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--rosa-fuerte);
+}
+
+/* Animación de flotación */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ========================================
+   ESTILOS PARA TABLAS DE PRECIOS
+   (Combos y Opcionales)
+   ======================================== */
+
+/* Alternancia de colores suaves en las filas */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 182, 193, 0.08);
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: rgba(176, 224, 230, 0.08);
+}
+
+/* Efecto hover mejorado para tablas de precios */
+.table tbody tr:hover {
+    background: linear-gradient(90deg, rgba(255, 20, 147, 0.12) 0%, rgba(0, 206, 209, 0.12) 100%);
+    transform: scale(1.01);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Columna de precio destacada */
+.table tbody td:last-child {
+    font-weight: 700;
+    color: var(--rosa-fuerte);
+    font-size: 1.05rem;
+}
+
+    /* Icono de moneda */
+    .table tbody td:last-child::before {
+        content: '💰 ';
+        font-size: 0.9rem;
+        margin-right: 4px;
+    }
+
+/* Estilo para nombres de productos */
+.table tbody td:first-child {
+    font-weight: 600;
+    color: #2C3E50;
+}
+
+/* Badge para destacar ciertos items (opcional) */
+.table tbody tr:first-child td:first-child::after {
+    content: ' ⭐';
+    font-size: 0.8rem;
+}
+
+/* ========================================
+   ESTILOS PARA NAVMENU.RAZOR
+   ======================================== */
+
+.brand-icon {
+    font-size: 1.8rem;
+    animation: rotate 3s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-10deg);
+    }
+
+    75% {
+        transform: rotate(10deg);
+    }
+}
+
+.brand-text {
+    letter-spacing: 1px;
+}
+
+.navbar-toggler {
+    display: none;
+}
+
+.nav-item {
+    margin: 6px 0;
+}
+
+.nav-link {
+    position: relative;
+    overflow: hidden;
+}
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: var(--gradient-principal);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+    }
+
+    .nav-link:hover::before {
+        transform: scaleY(1);
+    }
+
+    .nav-link.active::before {
+        transform: scaleY(1);
+    }
+
+.nav-icon {
+    font-size: 1.3rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.nav-text {
+    font-size: 0.95rem;
+}
+
+.nav-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 20, 147, 0.3) 50%, transparent 100%);
+    margin: 1rem 1.5rem;
+}
+
+.nav-section-title {
+    color: var(--celeste-fuerte);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0.75rem 1.5rem 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.nav-scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nav-scrollable::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.nav-scrollable::-webkit-scrollbar-thumb {
+    background: var(--gradient-principal);
+    border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+    .navbar-toggler {
+        display: block;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1001;
+    }
+
+    .nav-scrollable {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1000;
+    }
+
+    .navbar-toggler:checked ~ .nav-scrollable {
+        left: 0;
+    }
+
+    .brand-text {
+        font-size: 1.2rem;
+    }
+}
